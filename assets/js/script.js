@@ -173,6 +173,63 @@ $("#remove-tasks").on("click", function() {
   saveTasks();
 });
 
+$(".card .list-group").sortable({
+  connectWith: $(" .card .list-group"),
+  scroll: false,
+  tolerance: "pointer",
+  helper: "clone",
+  activate: function(event) {
+    console.log("activate", this);
+  },
+  deactivate: function(event) {
+    console.log("deactivate", this);
+  },
+  over: function(event) {
+    console.log("over", event.target);
+  },
+  out: function(event) {
+    console.log("out", event.target);
+  },
+  update: function(event) {
+    var tempArr = [];
+    $(this).children().each(function() {
+      tempArr.push({
+        text: $(this)
+          .find("p")
+          .text()
+          .trim(),
+        date: $(this)
+          .find("span")
+          .text()
+          .trim()
+      });
+    });
+       
+    var arrName = $(this)
+      .attr("id")
+      .replace("list-", "");
+
+     
+    tasks[arrName] = tempArr;
+      saveTasks();
+    },
+    stop: function(event) {
+      $(this).removeClass("dropover");
+    }
+  });
+  
+  // trash icon can be dropped onto
+  $("#trash").droppable({
+    accept: ".card .list-group-item",
+    tolerance: "touch",
+    drop: function(event, ui) {
+      // remove dragged element from the dom
+      ui.draggable.remove();
+    
+    
+},
+
+})
 // load tasks for the first time
 loadTasks();
 
